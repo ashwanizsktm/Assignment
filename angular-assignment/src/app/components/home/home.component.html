@@ -1,0 +1,20 @@
+<div class="global-wrap">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 col-lg-6">
+                <div ngbDropdown class="d-inline-block">
+                    <select class="btn btn-outline-primary" (ngModelChange)="OnChangeState()" [(ngModel)]="cityDetails.State" id="dropdownBasic1" ngbDropdownToggle>Toggle dropdown
+                        <option ngbDropdownItem *ngFor="let data of stateData">
+                            {{data.State}}
+                        </option>
+                    </select>
+                </div>
+                <div *ngFor="let city of cities">{{city.City}}</div>
+            </div>
+
+            <div class="col-md-12 col-lg-6">
+                <h2>Google map API</h2>
+            </div>
+        </div>
+    </div>
+</div>
