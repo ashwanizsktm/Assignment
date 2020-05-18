@@ -9,21 +9,16 @@ export class DataService {
 
   private stateData: State[];
   
-  // private cityName: any;
-
-  // GoogleMap API.
-//  googleMapsUrl = `https://maps.googleapis.com/maps/api/geocode/json?address='; + 
-//  ${this.cityName} + '&key=AIzaSyD6LB4LPsEY0kQU59tagY5zGKhekZWPUnw`;
-
   // State, City, district API.
   stateUrl = 'https://indian-cities-api-nocbegfhqg.now.sh';
 
   constructor(private http: HttpClient) { }
 
   // method to get geolocation.
-  // geoLocation(){
-  //   return this.http.get(this.googleMapsUrl);
-  // }
+  getGeoLocation(city){
+    return this.http.get(`https://maps.googleapis.com/maps/api/geocode/json?address='; + 
+    ${city} + '&key=AIzaSyD6LB4LPsEY0kQU59tagY5zGKhekZWPUnw`);
+  }
 
   // Method to get all the states
   getAllStates():Observable<State[]>{

@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { DataService } from './../../service/data.service';
-import { HttpClient } from '@angular/common/http';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -17,7 +16,7 @@ export class HomeComponent implements OnInit {
   longitude: number;
   zoom: number;
 
-  constructor(private dataService: DataService, private http: HttpClient) { }
+  constructor(private dataService: DataService) { }
 
   ngOnInit() {
     this.setCurrentLocation();
@@ -31,15 +30,8 @@ export class HomeComponent implements OnInit {
 
   onChangeCity(event) {
    this.cityName = event;
-  this.getGeoLocation();
+   this.dataService.getGeoLocation(this.cityName).subscribe(data => console.log(data));
   }
-
-  getGeoLocation() {
-    this.http.get(`https://maps.googleapis.com/maps/api/geocode/json?address=' + 
-    ${this.cityName} + '&key=AIzaSyD6LB4LPsEY0kQU59tagY5zGKhekZWPUnw`).subscribe((data => {
-      console.log(data);
-    }))
-  };
 
   setCurrentLocation() {
     if ('geolocation' in navigator) {
