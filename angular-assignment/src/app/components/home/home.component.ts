@@ -1,8 +1,6 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { State } from '../../modal/state.modal';
 import { DataService } from './../../service/data.service';
-
+import { HttpClient } from '@angular/common/http';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -11,25 +9,45 @@ import { DataService } from './../../service/data.service';
 
 export class HomeComponent implements OnInit {
 
-  private cityDetails = {
-    City: "",
-    State: "",
-    District: "",
-  };
-  stateData: State[];
-  private stateName: any;
+  title = "Cities GeoLocation"
+  private filteredState: any
   private cities: any;
+  private cityName:any;
+  latitude: number;
+  longitude: number;
+  zoom: number;
 
-  constructor(private dataService: DataService, private Http: HttpClient) { }
+  constructor(private dataService: DataService, private http: HttpClient) { }
 
   ngOnInit() {
-      this.dataService.getAllStates().subscribe(data => this.stateData = data);
+    this.setCurrentLocation();
+    this.dataService.getAllStates().subscribe
+      (data => this.filteredState = [...new Set(data.map(item => item.State))]);
   }
 
-  OnChangeState(){
-    console.log('State Name: ',this.cityDetails.State);
-    this.Http.get(`https://indian-cities-api-nocbegfhqg.now.sh/cities?State=${this.cityDetails.State}`).subscribe((data) => {
-      this.cities = data;
-    });
+  onchangeState(event) {
+    this.dataService.getAllCities(event).subscribe(data => this.cities = data);    
+  }
+
+  onChangeCity(event) {
+   this.cityName = event;
+  this.getGeoLocation();
+  }
+
+  getGeoLocation() {
+    this.http.get(`https://maps.googleapis.com/maps/api/geocode/json?address=' + 
+    ${this.cityName} + '&key=AIzaSyD6LB4LPsEY0kQU59tagY5zGKhekZWPUnw`).subscribe((data => {
+      console.log(data);
+    }))
+  };
+
+  setCurrentLocation() {
+    if ('geolocation' in navigator) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        this.latitude = position.coords.latitude;
+        this.longitude = position.coords.longitude;
+        this.zoom = 15;
+      });
+    }
   }
 }
